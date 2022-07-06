@@ -1,0 +1,33 @@
+add_action('init', function() {
+	$categories = get_categories([
+		'hide_empty' => false,
+		'parent'	=> 0
+	]);
+
+	$arr = [];
+	foreach( $categories as $category ) {
+		recursivewithKey($arr, $category); // With Keys
+		// recursive($arr, $category); // Tring with values
+	}
+
+	p($arr);
+	die;
+});
+
+/** Create an array to show the tree structure. */
+function recursivewithKey(&$arr, $category) {
+	$childCategories = get_categories([
+		'hide_empty' => false,
+		'parent'	=> $category->term_id
+	]);
+	foreach($childCategories as $childCategory) {
+		$arr[$category->name][$childCategory->name] = [];
+		recursive($arr[$category->name], $childCategory);
+	}
+}
+
+/** Show recursive values */
+function recursive(&$arr, $category) {}
+
+/** Show formatted output in the browser */
+function p( $c ) {echo '<pre>';	print_r($c);	echo '</pre>';}
